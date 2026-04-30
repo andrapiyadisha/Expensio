@@ -50,7 +50,7 @@ export async function GET() {
                 date: e.ExpenseDate,
                 category: e.categories?.CategoryName
             })),
-            ...recentIncomes.map(i => ({
+            ...recentIncomes.map((i: any) => ({
                 id: `inc-${i.IncomeID}`,
                 title: i.IncomeDetail || i.categories?.CategoryName || "Income",
                 amount: `+₹${parseFloat(i.Amount.toString()).toLocaleString()}`,
