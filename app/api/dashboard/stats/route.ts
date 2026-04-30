@@ -42,7 +42,7 @@ export async function GET() {
 
         // Combine and sort recent transactions
         const recentTransactions = [
-            ...recentExpenses.map(e => ({
+            ...recentExpenses.map((e: any) => ({
                 id: `exp-${e.ExpenseID}`,
                 title: e.ExpenseDetail || e.categories?.CategoryName || "Expense",
                 amount: `-₹${parseFloat(e.Amount.toString()).toLocaleString()}`,
