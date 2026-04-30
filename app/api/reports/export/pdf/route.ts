@@ -107,7 +107,7 @@ export async function GET() {
 
         const pdfBytes = await pdfDoc.save();
 
-        return new NextResponse(pdfBytes, {
+        return new NextResponse(Buffer.from(pdfBytes), {
             status: 200,
             headers: {
                 "Content-Disposition": 'attachment; filename="Wealth_Report.pdf"',
