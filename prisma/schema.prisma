@@ -1,6 +1,5 @@
 generator client {
-  provider = "prisma-client"
-  output   = "../app/generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -111,6 +110,8 @@ model projects {
   UserID           Int
   Created          DateTime   @default(now()) @db.DateTime(0)
   Modified         DateTime   @default(now()) @db.DateTime(0)
+  Budget           Decimal?   @db.Decimal(10, 2)
+  Progress         Int?       @default(0)
   IsActive         Boolean?   @default(dbgenerated("b'1'")) @db.Bit(1)
   expenses         expenses[]
   incomes          incomes[]
@@ -142,18 +143,33 @@ model sub_categories {
 }
 
 model users {
-  UserID         Int              @id @default(autoincrement())
-  UserName       String           @db.VarChar(250)
-  EmailAddress   String           @db.VarChar(500)
-  Password       String           @db.VarChar(50)
-  MobileNo       String           @db.VarChar(50)
-  ProfileImage   String?          @db.VarChar(500)
-  Created        DateTime         @default(now()) @db.DateTime(0)
-  Modified       DateTime         @default(now()) @db.DateTime(0)
+  UserID        Int       @id @default(autoincrement())
+  UserName      String    @db.VarChar(250)
+  EmailAddress  String    @unique @db.VarChar(500)
+  PasswordHash  String    @db.VarChar(255)
+  MobileNo      String    @db.VarChar(50)
+  ProfileImage  String?   @db.VarChar(500)
+  RoleID        Int
+  Created       DateTime  @default(now())
+  Modified      DateTime  @default(now())
+
+  role          roles     @relation(fields: [RoleID], references: [RoleID])
+
   categories     categories[]
   expenses       expenses[]
   incomes        incomes[]
   peoples        peoples[]
   projects       projects[]
   sub_categories sub_categories[]
+
+  @@index([RoleID])
+}
+
+model roles {
+  RoleID     Int     @id @default(autoincrement())
+  RoleName   String  @unique @db.VarChar(50)
+  Description String? @db.VarChar(250)
+  Created    DateTime @default(now())
+
+  users      users[]
 }
