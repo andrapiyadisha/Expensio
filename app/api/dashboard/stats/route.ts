@@ -93,7 +93,7 @@ export async function GET() {
             chartData[label] = { expense: 0, income: 0 };
         }
 
-        expensesByMonth.forEach(item => {
+        expensesByMonth.forEach((item: any)=> {
             const d = new Date(item.ExpenseDate);
             const label = `${months[d.getMonth()]} ${d.getFullYear() % 100}`;
             if (chartData[label]) {
@@ -101,7 +101,7 @@ export async function GET() {
             }
         });
 
-        incomesByMonth.forEach(item => {
+        incomesByMonth.forEach((item: any) => {
             const d = new Date(item.IncomeDate);
             const label = `${months[d.getMonth()]} ${d.getFullYear() % 100}`;
             if (chartData[label]) {
@@ -118,17 +118,21 @@ export async function GET() {
         });
 
         // Fetch category names for spendings
-        const categoryIds = categoriesSpendings.map(c => c.CategoryID).filter(id => id !== null) as number[];
+        const categoryIds = categoriesSpendings
+        .map((c: any) => c.CategoryID)
+        .filter((id: number | null) => id !== null) as number[];
+
         const categoryNames = await prisma.categories.findMany({
-            where: { CategoryID: { in: categoryIds } }
+        where: { CategoryID: { in: categoryIds } }
         });
 
-        const spendingsData = categoriesSpendings.map(c => {
-            const cat = categoryNames.find(cn => cn.CategoryID === c.CategoryID);
-            return {
-                label: cat?.CategoryName || "Other",
-                value: parseFloat(c._sum.Amount?.toString() || "0")
-            };
+        const spendingsData = categoriesSpendings.map((c: any) => {
+        const cat = categoryNames.find((cn: any) => cn.CategoryID === c.CategoryID);
+
+        return {
+            label: cat?.CategoryName || "Other",
+            value: parseFloat(c._sum.Amount?.toString() || "0")
+        };
         });
 
         return NextResponse.json({
